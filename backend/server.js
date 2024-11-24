@@ -1,6 +1,6 @@
 const express = require('express');
-// const mysql = require('mysql2');
-const mysql = require('mysql2/promise');
+const mysql = require('mysql2');
+// const mysql = require('mysql2/promise');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -24,31 +24,31 @@ app.use(cors({
 
 // Set up MySQL connection
 // Create a connection
-// const db = mysql.createConnection({
-//     host: process.env.DB_HOST,
-//     user: process.env.DB_USER,
-//     password: process.env.DB_PASSWORD,
-//     database: process.env.DB_NAME,
-// });
-const db = mysql.createPool({
+const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
 });
-
-module.exports = db;
-
-// // Connect to the database
-// db.connect((err) => {
-//     if (err) {
-//         console.error('Database connection error:', err);
-//         process.exit(1); // Exit the process if connection fails
-//     } else {
-//         console.log('Connected to the MySQL database');
-//     }
+// const db = mysql.createPool({
+//     host: process.env.DB_HOST,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME,
+//     port: 3306,
 // });
+
+// module.exports = db;
+
+// Connect to the database
+db.connect((err) => {
+    if (err) {
+        console.error('Database connection error:', err);
+        process.exit(1); // Exit the process if connection fails
+    } else {
+        console.log('Connected to the MySQL database');
+    }
+});
 
 // JWT secret
 const JWT_SECRET = process.env.JWT_SECRET;
