@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://21ed-82-215-95-42.ngrok-free.app/api',
+    baseURL: 'https://89af-82-215-95-42.ngrok-free.app/api',
 });
 
 export const loginUser = (data) => api.post('/login', data);
