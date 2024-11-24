@@ -50,8 +50,6 @@ db.connect((err) => {
     }
 });
 
-module.exports = db;
-
 // JWT secret
 const JWT_SECRET = process.env.JWT_SECRET;
 
