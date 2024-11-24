@@ -11,23 +11,20 @@ const useUsers = (navigate) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                navigate('/login'); // Redirect to login if token is missing
+                navigate('/login');
                 return;
             }
 
             const response = await api.get('/users', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
-
-            console.log('Users fetched from API:', response.data); // Debugging log
+            console.log('Users fetched from API:', response.data); // Debug log
             setUsers(response.data);
         } catch (err) {
-            console.error(err);
+            console.error('Error fetching users:', err);
             if (err.response?.status === 401 || err.response?.status === 403) {
-                localStorage.removeItem('token'); // Clear invalid token
-                navigate('/login'); // Redirect to login
+                localStorage.removeItem('token');
+                navigate('/login');
             }
         }
     };
