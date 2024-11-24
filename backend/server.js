@@ -121,33 +121,20 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// app.get('/api/users', authenticateToken, (req, res) => {
-//     const query = `
-//         SELECT id, name, email, last_login, status
-//         FROM users
-//         ORDER BY last_login DESC
-//     `;
-//
-//     db.query(query, (err, results) => {
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).json({ error: 'Server error' });
-//         }
-//         res.json(results);
-//     });
-// });
-app.get('/api/users', authenticateToken, async (req, res) => {
-    try {
-        const [results] = await promiseDb.query(`
-            SELECT id, name, email, last_login, status 
-            FROM users 
-            ORDER BY last_login DESC
-        `);
+app.get('/api/users', authenticateToken, (req, res) => {
+    const query = `
+        SELECT id, name, email, last_login, status
+        FROM users
+        ORDER BY last_login DESC
+    `;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Server error' });
+        }
         res.json(results);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Server error' });
-    }
+    });
 });
 
 app.post('/api/users/action', authenticateToken, (req, res) => {
