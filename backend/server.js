@@ -10,7 +10,8 @@ const cors = require('cors');
 const allowedOrigins = [
     'http://localhost:3000', // for local frontend testing
     'https://user-management-three-zeta.vercel.app', // your Vercel frontend URL
-    'https://user-management-git-main-orifhon74s-projects.vercel.app', // optional if you're using this URL
+    'https://user-management-git-main-orifhon74s-projects.vercel.app',
+    'https://user-management-kq5yf1t07-orifhon74s-projects.vercel.app/',
 ];
 
 const app = express();
