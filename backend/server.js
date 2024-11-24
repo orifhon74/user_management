@@ -21,7 +21,6 @@ app.use(cors({
     credentials: true, // Allow cookies
 }));
 
-
 // Set up MySQL connection
 // Create a connection
 const db = mysql.createConnection({
@@ -29,16 +28,8 @@ const db = mysql.createConnection({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
 });
-// const db = mysql.createPool({
-//     host: process.env.DB_HOST,
-//     user: process.env.DB_USER,
-//     password: process.env.DB_PASSWORD,
-//     database: process.env.DB_NAME,
-//     port: 3306,
-// });
-
-// module.exports = db;
 
 // Connect to the database
 db.connect((err) => {
