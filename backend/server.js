@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 app.use(cors({
     origin: allowedOrigins,
     credentials: true, // Allow cookies if needed
-    methods: ['GET', 'POST'], // Allow specific HTTP methods
+    methods: ['GET', 'POST', 'OPTIONS'], // Allow specific HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
 }));
 
