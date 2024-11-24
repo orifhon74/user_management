@@ -5,26 +5,32 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
 const cors = require('cors');
-const allowedOrigins = [
-    'http://localhost:3000', // for local frontend testing
-    'https://user-management-three-zeta.vercel.app',
-    'https://user-management-git-main-orifhon74s-projects.vercel.app',
-];
 
 const app = express();
-app.use(bodyParser.json());
-// app.use(cors());
+app.options('*', cors());
+
+const allowedOrigins = [
+    'https://user-management-three-zeta.vercel.app',
+    'http://localhost:3000',
+];
+
 app.use(cors({
-    origin: allowedOrigins,
-    credentials: true, // Allow cookies if needed
-    methods: ['GET', 'POST', 'OPTIONS'], // Allow specific HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Set up MySQL connection
-// Create a connection
+app.use(bodyParser.json());
+
+// MySQL connection setup
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -33,11 +39,10 @@ const db = mysql.createConnection({
     port: process.env.DB_PORT,
 });
 
-// Connect to the database
 db.connect((err) => {
     if (err) {
         console.error('Database connection error:', err);
-        process.exit(1); // Exit the process if connection fails
+        process.exit(1);
     } else {
         console.log('Connected to the MySQL database');
     }
