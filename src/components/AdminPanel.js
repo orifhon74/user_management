@@ -27,11 +27,13 @@ const AdminPanel = () => {
     };
 
     // Filtered users based on search input
-    const filteredUsers = users.filter(
-        (user) =>
-            user.name.toLowerCase().includes(filter.toLowerCase()) ||
-            user.email.toLowerCase().includes(filter.toLowerCase())
-    );
+    const filteredUsers = Array.isArray(users)
+        ? users.filter(
+            (user) =>
+                user.name.toLowerCase().includes(filter?.toLowerCase() || '') ||
+                user.email.toLowerCase().includes(filter?.toLowerCase() || '')
+        )
+        : [];
 
     return (
         <div className="container mt-5">
