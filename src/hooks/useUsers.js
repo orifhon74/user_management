@@ -21,6 +21,7 @@ const useUsers = (navigate) => {
                 },
             });
 
+            console.log('Users fetched from API:', response.data); // Debugging log
             setUsers(response.data);
         } catch (err) {
             console.error(err);
