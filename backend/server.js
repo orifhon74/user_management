@@ -11,27 +11,25 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Set up MySQL connection
-const db = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'user_management',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
+// Create a connection
+const db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
 });
 
-// Promisify the pool for async/await
-const promiseDb = db.promise();
-
-// Connect to MySQL
+// Connect to the database
 db.connect((err) => {
     if (err) {
         console.error('Database connection error:', err);
+        process.exit(1); // Exit the process if connection fails
     } else {
         console.log('Connected to the MySQL database');
     }
 });
+
+module.exports = db;
 
 // JWT secret
 const JWT_SECRET = process.env.JWT_SECRET;
