@@ -6,14 +6,20 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const cors = require('cors');
+const allowedOrigins = [
+    'http://localhost:3000', // for local frontend testing
+    'https://user-management-three-zeta.vercel.app', // your Vercel frontend URL
+    'https://user-management-git-main-orifhon74s-projects.vercel.app', // optional if you're using this URL
+];
 
 const app = express();
 app.use(bodyParser.json());
 // app.use(cors());
 app.use(cors({
-    origin: ['http://localhost:3000', 'https://<your-vercel-url>.vercel.app'],
-    credentials: true,
+    origin: allowedOrigins,
+    credentials: true, // Allow cookies
 }));
+
 
 // Set up MySQL connection
 // Create a connection
