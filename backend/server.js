@@ -9,9 +9,8 @@ require('dotenv').config();
 const cors = require('cors');
 const allowedOrigins = [
     'http://localhost:3000', // for local frontend testing
-    'https://user-management-three-zeta.vercel.app', // your Vercel frontend URL
+    'https://user-management-three-zeta.vercel.app',
     'https://user-management-git-main-orifhon74s-projects.vercel.app',
-    'https://user-management-kq5yf1t07-orifhon74s-projects.vercel.app/',
 ];
 
 const app = express();
@@ -19,7 +18,9 @@ app.use(bodyParser.json());
 // app.use(cors());
 app.use(cors({
     origin: allowedOrigins,
-    credentials: true, // Allow cookies
+    credentials: true, // Allow cookies if needed
+    methods: ['GET', 'POST'], // Allow specific HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
 }));
 
 // Set up MySQL connection
