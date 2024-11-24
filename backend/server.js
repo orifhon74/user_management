@@ -40,15 +40,15 @@ const db = mysql.createPool({
 
 module.exports = db;
 
-// Connect to the database
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection error:', err);
-        process.exit(1); // Exit the process if connection fails
-    } else {
-        console.log('Connected to the MySQL database');
-    }
-});
+// // Connect to the database
+// db.connect((err) => {
+//     if (err) {
+//         console.error('Database connection error:', err);
+//         process.exit(1); // Exit the process if connection fails
+//     } else {
+//         console.log('Connected to the MySQL database');
+//     }
+// });
 
 // JWT secret
 const JWT_SECRET = process.env.JWT_SECRET;
