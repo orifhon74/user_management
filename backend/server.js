@@ -11,12 +11,18 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Set up MySQL connection
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+const db = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'user_management',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
 });
+
+// Promisify the pool for async/await
+const promiseDb = db.promise();
 
 // Connect to MySQL
 db.connect((err) => {
@@ -117,20 +123,33 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-app.get('/api/users', authenticateToken, (req, res) => {
-    const query = `
-        SELECT id, name, email, last_login, status 
-        FROM users 
-        ORDER BY last_login DESC
-    `;
-
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Server error' });
-        }
+// app.get('/api/users', authenticateToken, (req, res) => {
+//     const query = `
+//         SELECT id, name, email, last_login, status
+//         FROM users
+//         ORDER BY last_login DESC
+//     `;
+//
+//     db.query(query, (err, results) => {
+//         if (err) {
+//             console.error(err);
+//             return res.status(500).json({ error: 'Server error' });
+//         }
+//         res.json(results);
+//     });
+// });
+app.get('/api/users', authenticateToken, async (req, res) => {
+    try {
+        const [results] = await promiseDb.query(`
+            SELECT id, name, email, last_login, status 
+            FROM users 
+            ORDER BY last_login DESC
+        `);
         res.json(results);
-    });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
 });
 
 app.post('/api/users/action', authenticateToken, (req, res) => {
