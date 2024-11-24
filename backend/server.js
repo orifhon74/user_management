@@ -3,12 +3,17 @@ const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const cors = require('cors');
 require('dotenv').config();
+
+const cors = require('cors');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:3000', 'https://<your-vercel-url>.vercel.app'],
+    credentials: true,
+}));
 
 // Set up MySQL connection
 // Create a connection
