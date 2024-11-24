@@ -150,6 +150,7 @@ app.get('/api/users', authenticateToken, (req, res) => {
             console.error(err);
             return res.status(500).json({ error: 'Server error' });
         }
+        console.log('Query Results:', results);
         res.json(results);
     });
 });
