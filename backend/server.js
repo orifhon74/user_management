@@ -16,18 +16,15 @@ const allowedOrigins = [
     'https://89af-82-215-95-42.ngrok-free.app',
 ];
 
-app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-}));
+const corsOptions = {
+    origin: 'https://user-management-three-zeta.vercel.app', // Frontend domain
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // Allow cookies if needed
+};
+app.use(cors(corsOptions));
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 // MySQL connection setup
 const db = mysql.createConnection({
@@ -45,6 +42,11 @@ db.connect((err) => {
     } else {
         console.log('Connected to the MySQL database');
     }
+});
+
+app.use((req, res, next) => {
+    console.log('Request Headers:', req.headers);
+    next();
 });
 
 // JWT secret
