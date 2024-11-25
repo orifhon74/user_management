@@ -10,12 +10,6 @@ const cors = require('cors');
 const app = express();
 app.options('*', cors());
 
-const allowedOrigins = [
-    'https://user-management-three-zeta.vercel.app',
-    'http://localhost:3002',
-    'https://89af-82-215-95-42.ngrok-free.app',
-];
-
 const corsOptions = {
     origin: 'https://user-management-three-zeta.vercel.app', // Frontend domain
     methods: ['GET', 'POST', 'OPTIONS'],
@@ -152,7 +146,6 @@ app.get('/api/users', authenticateToken, (req, res) => {
             console.error(err);
             return res.status(500).json({ error: 'Server error' });
         }
-        console.log('Query Results:', results);
         res.json(results);
     });
 });

@@ -9,7 +9,6 @@ const useUsers = (navigate) => {
 
     const fetchUsers = async () => {
         try {
-            console.log('Token used for API call:', localStorage.getItem('token'));
             const token = localStorage.getItem('token');
             if (!token) {
                 navigate('/login');
