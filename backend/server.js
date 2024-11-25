@@ -158,13 +158,21 @@ app.post('/api/login', async (req, res) => {
         const currentTimestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         // Update last_login using the current timestamp
-        await db.promise().query('UPDATE users SET last_login = ? WHERE id = ?', [currentTimestamp, user.id]);
+        await db.promise().query('UPDATE users SET last_login = CONVERT_TZ(NOW(), \'SYSTEM\', \'+00:00\') WHERE id = ?', [currentTimestamp, user.id]);
 
         const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
         res.json({ token, userId: user.id });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+db.query('SET time_zone = "+00:00";', (err) => {
+    if (err) {
+        console.error('Error setting time zone:', err);
+    } else {
+        console.log('Time zone set to UTC');
     }
 });
 
