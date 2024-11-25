@@ -168,6 +168,14 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+db.query('SET time_zone = "+00:00";', (err) => {
+    if (err) {
+        console.error('Error setting time zone:', err);
+    } else {
+        console.log('Time zone set to UTC');
+    }
+});
+
 app.get('/api/users', authenticateToken, (req, res) => {
     const query = `
         SELECT id, name, email, last_login, status
