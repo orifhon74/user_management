@@ -137,44 +137,33 @@ app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Fetch user details based on the email
         const [users] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
 
-        // Check if user exists
         if (users.length === 0) {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
         const user = users[0];
 
-        // Verify the password
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
-        // Check if the user is blocked
         if (user.status === 'blocked') {
             return res.status(403).json({ error: 'Your account is blocked.' });
         }
 
-        // Update the last_login field to the current time
-        const updateQuery = 'UPDATE users SET last_login = NOW() WHERE id = ?';
-        const [updateResult] = await db.promise().query(updateQuery, [user.id]);
+        // Generate the current timestamp in JavaScript
+        const currentTimestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-        // Confirm the update succeeded
-        if (updateResult.affectedRows === 0) {
-            console.error('Failed to update last_login for user ID:', user.id);
-            return res.status(500).json({ error: 'Failed to update login time' });
-        }
+        // Update last_login using the current timestamp
+        await db.promise().query('UPDATE users SET last_login = ? WHERE id = ?', [currentTimestamp, user.id]);
 
-        // Generate JWT token
         const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
-
-        // Respond with the token and userId
         res.json({ token, userId: user.id });
     } catch (err) {
-        console.error('Error during login:', err);
+        console.error(err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
