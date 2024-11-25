@@ -1,10 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://89af-82-215-95-42.ngrok-free.app/api',
-    headers: {
-        'Content-Type': 'application/json',
-    },
+    baseURL: 'https://user-management-uyj6.onrender.com/api',
 });
 
 export const loginUser = (data) => api.post('/login', data);
