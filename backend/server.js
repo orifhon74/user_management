@@ -22,22 +22,34 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // MySQL connection setup
-const db = mysql.createConnection({
+// const db = mysql.createConnection({
+//     host: process.env.DB_HOST,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_DATABASE,
+//     port: process.env.DB_PORT,
+// });
+//
+// db.connect((err) => {
+//     if (err) {
+//         console.error('Database connection error:', err);
+//         process.exit(1);
+//     } else {
+//         console.log('Connected to the MySQL database');
+//     }
+// });
+const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
     port: process.env.DB_PORT,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
 });
 
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection error:', err);
-        process.exit(1);
-    } else {
-        console.log('Connected to the MySQL database');
-    }
-});
+const db = pool.promise();
 
 app.use((req, res, next) => {
     console.log('Request Headers:', req.headers);
@@ -102,37 +114,6 @@ app.post('/api/register', async (req, res) => {
 });
 
 // Login
-// app.post('/api/login', async (req, res) => {
-//     const { email, password } = req.body;
-//
-//     try {
-//         const [users] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
-//
-//         if (users.length === 0) {
-//             return res.status(401).json({ error: 'Invalid email or password' });
-//         }
-//
-//         const user = users[0];
-//
-//         const validPassword = await bcrypt.compare(password, user.password);
-//         if (!validPassword) {
-//             return res.status(401).json({ error: 'Invalid email or password' });
-//         }
-//
-//         if (user.status === 'blocked') {
-//             return res.status(403).json({ error: 'Your account is blocked.' });
-//         }
-//
-//         // Update last_login to the current time
-//         await db.promise().query('UPDATE users SET last_login = NOW() WHERE id = ?', [user.id]);
-//
-//         const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
-//         res.json({ token, userId: user.id });
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
 
