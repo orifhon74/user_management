@@ -27,13 +27,20 @@ const AdminPanel = () => {
     };
 
     // Filtered users based on search input
-    const filteredUsers = Array.isArray(users)
-        ? users.filter(
+    // const filteredUsers = Array.isArray(users)
+    //     ? users.filter(
+    //         (user) =>
+    //             user.name.toLowerCase().includes(filter?.toLowerCase() || '') ||
+    //             user.email.toLowerCase().includes(filter?.toLowerCase() || '')
+    //     )
+    //     : [];
+    const filteredUsers = [...users]
+        .sort((a, b) => new Date(b.last_login) - new Date(a.last_login)) // Ensure sorting
+        .filter(
             (user) =>
-                user.name.toLowerCase().includes(filter?.toLowerCase() || '') ||
-                user.email.toLowerCase().includes(filter?.toLowerCase() || '')
-        )
-        : [];
+                user.name.toLowerCase().includes(filter.toLowerCase()) ||
+                user.email.toLowerCase().includes(filter.toLowerCase())
+        );
 
     return (
         <div className="container mt-5">
