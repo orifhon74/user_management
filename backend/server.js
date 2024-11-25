@@ -158,7 +158,7 @@ app.post('/api/login', async (req, res) => {
         const currentTimestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         // Update last_login using the current timestamp
-        await db.promise().query('UPDATE users SET last_login = CONVERT_TZ(NOW(), \'SYSTEM\', \'+00:00\') WHERE id = ?', [currentTimestamp, user.id]);
+        await db.promise().query('UPDATE users SET last_login = ? WHERE id = ?', [currentTimestamp, user.id]);
 
         const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
         res.json({ token, userId: user.id });
