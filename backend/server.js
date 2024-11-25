@@ -12,7 +12,8 @@ app.options('*', cors());
 
 const allowedOrigins = [
     'https://user-management-three-zeta.vercel.app',
-    'http://localhost:3000',
+    'http://localhost:3002',
+    'https://89af-82-215-95-42.ngrok-free.app',
 ];
 
 app.use(cors({
