@@ -18,7 +18,6 @@ const useUsers = (navigate) => {
             const response = await api.get('/users', {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    'ngrok-skip-browser-warning': 'true',
                 },
             });
 
