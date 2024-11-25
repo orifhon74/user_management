@@ -1,6 +1,6 @@
 const express = require('express');
-const mysql = require('mysql2');
-// const mysql = require('mysql2/promise');
+// const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
