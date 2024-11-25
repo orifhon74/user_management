@@ -1,6 +1,6 @@
 const express = require('express');
-// const mysql = require('mysql2');
-const mysql = require('mysql2/promise');
+const mysql = require('mysql2');
+// const mysql = require('mysql2/promise');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -22,34 +22,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // MySQL connection setup
-// const db = mysql.createConnection({
-//     host: process.env.DB_HOST,
-//     user: process.env.DB_USER,
-//     password: process.env.DB_PASSWORD,
-//     database: process.env.DB_DATABASE,
-//     port: process.env.DB_PORT,
-// });
-//
-// db.connect((err) => {
-//     if (err) {
-//         console.error('Database connection error:', err);
-//         process.exit(1);
-//     } else {
-//         console.log('Connected to the MySQL database');
-//     }
-// });
-const pool = mysql.createPool({
+const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
     port: process.env.DB_PORT,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
 });
 
-const db = pool.promise();
+db.connect((err) => {
+    if (err) {
+        console.error('Database connection error:', err);
+        process.exit(1);
+    } else {
+        console.log('Connected to the MySQL database');
+    }
+});
 
 app.use((req, res, next) => {
     console.log('Request Headers:', req.headers);
