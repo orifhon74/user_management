@@ -26,7 +26,8 @@ const useUsers = (navigate) => {
                 throw new Error('Invalid response from API');
             }
 
-            setUsers(response.data);
+            setUsers(response.data.sort((a, b) => new Date(b.last_login) - new Date(a.last_login)));
+            // setUsers(response.data);
         } catch (err) {
             console.error('Error fetching users:', err);
         }
