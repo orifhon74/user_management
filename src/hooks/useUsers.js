@@ -18,14 +18,15 @@ const useUsers = (navigate) => {
             const response = await api.get('/users', {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            console.log('Users fetched from API:', response.data); // Debug log
+
+            console.log('Users fetched from API:', response.data);
+            if (!Array.isArray(response.data)) {
+                throw new Error('Invalid response from API');
+            }
+
             setUsers(response.data);
         } catch (err) {
             console.error('Error fetching users:', err);
-            if (err.response?.status === 401 || err.response?.status === 403) {
-                localStorage.removeItem('token');
-                navigate('/login');
-            }
         }
     };
 
