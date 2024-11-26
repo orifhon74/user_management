@@ -6,18 +6,24 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false); // Add loading state
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setMessage('');
         try {
             const response = await loginUser({ email, password });
             localStorage.setItem('token', response.data.token);
-            localStorage.setItem('userId', response.data.userId); // Store userId
+            localStorage.setItem('userId', response.data.userId);
             setMessage('Login successful!');
             navigate('/admin'); // Redirect to admin panel
         } catch (err) {
-            setMessage(err.response?.data?.error || 'Something went wrong!');
+            console.error('Login error:', err);
+            setMessage(err.response?.data?.error || 'Invalid credentials. Please try again.');
+        } finally {
+            setLoading(false); // Reset loading state
         }
     };
 
@@ -50,10 +56,12 @@ function Login() {
                             required
                         />
                     </div>
-                    <button type="submit" className="btn btn-primary w-100 mb-3">Sign In</button>
+                    <button type="submit" className="btn btn-primary w-100 mb-3" disabled={loading}>
+                        {loading ? 'Signing In...' : 'Sign In'}
+                    </button>
                 </form>
                 {message && (
-                    <div className="alert alert-danger" role="alert">
+                    <div className={`alert ${message.includes('successful') ? 'alert-success' : 'alert-danger'}`} role="alert">
                         {message}
                     </div>
                 )}
@@ -75,4 +83,3 @@ function Login() {
 }
 
 export default Login;
-

@@ -7,23 +7,24 @@ function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false); // Add loading state
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        setMessage(''); // Clear any previous messages
+        setMessage('');
+        setLoading(true);
         try {
-            // Call the registration API
             const response = await registerUser({ name, email, password });
-
-            // Save the token in localStorage
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('userId', response.data.userId);
-
-            // Redirect to the admin panel
-            navigate('/admin');
+            setMessage('Account created successfully!');
+            navigate('/admin'); // Redirect to admin panel
         } catch (err) {
-            setMessage(err.response?.data?.error || 'Something went wrong!');
+            console.error('Registration error:', err);
+            setMessage(err.response?.data?.error || 'Unable to create account. Please try again.');
+        } finally {
+            setLoading(false); // Reset loading state
         }
     };
 
@@ -33,9 +34,7 @@ function Register() {
                 <h2 className="text-center mb-4">Sign Up</h2>
                 <form onSubmit={handleRegister}>
                     <div className="mb-3">
-                        <label htmlFor="name" className="form-label">
-                            Full Name
-                        </label>
+                        <label htmlFor="name" className="form-label">Full Name</label>
                         <input
                             type="text"
                             id="name"
@@ -47,9 +46,7 @@ function Register() {
                         />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="email" className="form-label">
-                            Email Address
-                        </label>
+                        <label htmlFor="email" className="form-label">Email Address</label>
                         <input
                             type="email"
                             id="email"
@@ -61,9 +58,7 @@ function Register() {
                         />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="password" className="form-label">
-                            Password
-                        </label>
+                        <label htmlFor="password" className="form-label">Password</label>
                         <input
                             type="password"
                             id="password"
@@ -74,21 +69,25 @@ function Register() {
                             required
                         />
                     </div>
-                    <button type="submit" className="btn btn-primary w-100">
-                        Sign Up
+                    <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                        {loading ? 'Signing Up...' : 'Sign Up'}
                     </button>
                 </form>
                 {message && (
-                    <div className="alert alert-info mt-3" role="alert">
+                    <div className={`alert ${message.includes('successfully') ? 'alert-success' : 'alert-danger'} mt-3`} role="alert">
                         {message}
                     </div>
                 )}
                 <div className="text-center mt-3">
                     <p>
                         Already have an account?{' '}
-                        <a href="/login" className="text-primary">
+                        <span
+                            className="text-primary text-decoration-underline"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => navigate('/login')}
+                        >
                             Sign In
-                        </a>
+                        </span>
                     </p>
                 </div>
             </div>
