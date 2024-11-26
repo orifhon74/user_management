@@ -73,9 +73,6 @@ function Register() {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-                        <small className="form-text text-muted">
-                            Must contain at least 8 characters, including uppercase, lowercase, and a number.
-                        </small>
                     </div>
                     <button type="submit" className="btn btn-primary w-100">
                         Sign Up
